@@ -15,6 +15,13 @@ namespace WebApp.Controllers
             return View();
         }
 
+        #region 倒计时
+        public IActionResult Time()
+        {
+            return View();
+        } 
+        #endregion
+
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";

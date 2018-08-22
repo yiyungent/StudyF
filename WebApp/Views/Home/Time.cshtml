@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewData["Title"] = "Time";
+}
+@section Scripts{ 
+	<script src="~/lib/jquery-cookie/jquery.cookie.js" asp-append-version="true"></script>
+	<script src="~/js/time.js" asp-append-version="true"></script>
+}
+
+<h2>Time</h2>
+<div>
+	<form>
+		<div class="form-group">
+			<label for="inputMessage">Message</label>
+			<input type="text" class="form-control" id="inputMessage" placeholder="To watch the sunrise must wait till dawn." value="" />
+		</div>
+		<button type="submit" class="btn btn-primary btn-block" id="btnClock">我起床了</button>
+	</form>
+</div>
+<hr />
+<h3>@DateTime.Now.ToString("yyyy年MM月dd日")&nbsp;早起百人榜</h3>
+<table class="table" style="word-break:break-all; word-wrap:break-all;">
+	<thead>
+		<tr>
+			<th class="text-nowrap">Ranking-ID</th>
+			<th>Time</th>
+			<th>Message</th>
+		</tr>
+	</thead>
+	<tbody id="ranking-list">
+		@*<tr>
+			<td class="text-nowrap">001</td>
+			<td class="text-nowrap">Reddy</td>
+			<td>A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+A+</td>
+		</tr>*@
+	</tbody>
+</table>
