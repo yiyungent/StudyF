@@ -40,7 +40,7 @@
 	function loadRanking() {
 		$("#ranking-list").html("");
 		$.ajax({
-			url: "/API/RankingData",
+			url: "/API/GetRankingList",
 			type: "POST",
 			data: {},
 			dataType: "json",
@@ -54,7 +54,7 @@
 
 	function showRanking(dataList) {
 		for (var i = 0; i < dataList.length; i++) {
-			$("#ranking-list").append('<tr><td class="text-nowrap">' + (i + 1) + '</td><td class="text-nowrap">' + dataList[i].sendTime + '</td><td>' + dataList[i].message + '</td></tr>');
+			$("#ranking-list").append('<tr><td class="text-nowrap">' + (i + 1) + '</td><td class="text-nowrap">' + dataList[i].sendTime + '</td><td>' + dataList[i].sendMessage + '</td></tr>');
 		}
 	}
 	// end load ranking

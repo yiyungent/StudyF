@@ -2,73 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BLL;
-using DAL;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Model;
+using Model.EF;
 
 namespace WebApp.Controllers
 {
     public class APIController : Controller
     {
-        private TimeMsgBll _timeMsgBll = new TimeMsgBll();
+        private BaseDbContext _baseDbContext;
+
+        public APIController(BaseDbContext baseDbContext)
+        {
+            _baseDbContext = baseDbContext;
+        }
 
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult TimeMsg()
+        public IActionResult TestAdd()
         {
-            return View();
+            Random r = new Random();
+            Model.RankingList rankingList = new Model.RankingList { SendTime = DateTime.Now, SenderIP = HttpContext.Connection.RemoteIpAddress.ToString(), SendMessage = "我就测试一下" + r.Next(0, 10) };
+            this._baseDbContext.RankingList.Add(rankingList);
+
+            this._baseDbContext.SaveChanges();
+
+            return Content("success");
         }
 
-
-        [HttpPost]
-        public IActionResult TimeMsg(string inputMessage)
+        #region 获取排行榜数据
+        public IActionResult GetRankingList()
         {
-            #region MySql EF Core Test
-            //var optionsBuilder = new DbContextOptionsBuilder<TimeMsgDbContext>();
-            //optionsBuilder.UseMySQL("server=localhost;user id=root;pwd=admin;database=studyfcoredb;");
-            //TimeMsgDbContext timeMsgDbContext = new TimeMsgDbContext(optionsBuilder.Options);
-            //TimeMsg timeMsg = new TimeMsg();
-            //timeMsg.Message = inputMessage;
-            //timeMsg.SenderIP = HttpContext.Connection.RemoteIpAddress.ToString();
-            //timeMsg.SendTime = DateTime.Now;
-            //timeMsgDbContext.TimeMsg.Add(timeMsg);
-            //timeMsgDbContext.SaveChanges(); 
-            #endregion
-            inputMessage = inputMessage.Length > 50 ? inputMessage.Substring(0, 44) + "......" : inputMessage;
-            TimeMsg timeMsg = new TimeMsg();
-            timeMsg.Message = inputMessage;
-            //timeMsg.SenderIP = HttpContext.Connection.RemoteIpAddress.ToString();
-            timeMsg.SenderIP = GetUserIp(HttpContext);
-            timeMsg.SendTime = DateTime.Now;
-            if (_timeMsgBll.Add(timeMsg))
-            {
-                return Json(new { isSuccess = true });
-            }
-            else
-            {
-                return Json(new { isSuccess = false });
-            }
-        }
+            // 等待实现
+            // 以下临时实现
+            var ranking = (from r in this._baseDbContext.RankingList
+                           where r.SendTime.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd")
+                           orderby r.SendTime ascending
+                           select r).Take<Model.RankingList>(100);
 
-        public IActionResult RankingData()
-        {
-            List<TimeMsg> timeMsgs = _timeMsgBll.GetList();
-            return Json(new { isSuccess = true, tipMsg = "加载成功", dataList = timeMsgs });
+            return Json(new { isSuccess = true, dataList = ranking.ToList<Model.RankingList>() });
         }
-
-        private string GetUserIp(Microsoft.AspNetCore.Http.HttpContext context)
-        {
-            var ip = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-            if (string.IsNullOrEmpty(ip))
-            {
-                ip = context.Connection.RemoteIpAddress.ToString();
-            }
-            return ip;
-        }
+        #endregion
     }
 }

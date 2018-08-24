@@ -5,18 +5,19 @@ using System.Text;
 
 namespace Model
 {
-    public class TimeMsg
+    public partial class RankingList
     {
-        [Key, Required]
-        public int ID { get; set; }
-
-        [MaxLength(50)]
-        public string Message { get; set; }
+        [Key]
+        public int RID { get; set; }
 
         [Required]
         public DateTime SendTime { get; set; }
 
-        [Required]
+        [Required, MaxLength(20)]
         public string SenderIP { get; set; }
+
+        [MaxLength(100)]
+        public string SendMessage { get; set; }
     }
+
 }
