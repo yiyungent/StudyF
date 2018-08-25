@@ -10,6 +10,7 @@ namespace DAL
 {
     public class RankingListDal : BaseDal<Model.RankingList>, IRankingListDal
     {
-
+        public RankingListDal(object objDbContext) : base(objDbContext)
+        { }
     }
 }

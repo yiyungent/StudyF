@@ -11,9 +11,12 @@ namespace WebApp.Controllers
     {
         private BaseDbContext _baseDbContext;
 
+        private IBLL.IRankingListService _rankingListService;
+
         public APIController(BaseDbContext baseDbContext)
         {
-            _baseDbContext = baseDbContext;
+            this._baseDbContext = baseDbContext;
+            this._rankingListService = new BLL.RankingListService(baseDbContext);
         }
 
         public IActionResult Index()
@@ -21,28 +24,26 @@ namespace WebApp.Controllers
             return View();
         }
 
-        public IActionResult TestAdd()
+        #region Time打卡
+        [HttpPost]
+        public IActionResult PunchClock()
         {
-            Random r = new Random();
-            Model.RankingList rankingList = new Model.RankingList { SendTime = DateTime.Now, SenderIP = HttpContext.Connection.RemoteIpAddress.ToString(), SendMessage = "我就测试一下" + r.Next(0, 10) };
-            this._baseDbContext.RankingList.Add(rankingList);
+            string sendMessage = Request.Form["inputMessage"];
+            DateTime sendTime = DateTime.Now;
+            string senderIP = HttpContext.Connection.RemoteIpAddress.ToString();
 
-            this._baseDbContext.SaveChanges();
+            Model.RankingList model = new Model.RankingList() { SendMessage = sendMessage, SendTime = sendTime, SenderIP = senderIP };
+            Model.RankingList addModel = this._rankingListService.AddEntity(model);
 
-            return Content("success");
+            return Json(new { isSuccess = true, punchInfo = addModel });
         }
+        #endregion
 
         #region 获取排行榜数据
         public IActionResult GetRankingList()
         {
-            // 等待实现
-            // 以下临时实现
-            var ranking = (from r in this._baseDbContext.RankingList
-                           where r.SendTime.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd")
-                           orderby r.SendTime ascending
-                           select r).Take<Model.RankingList>(100);
-
-            return Json(new { isSuccess = true, dataList = ranking.ToList<Model.RankingList>() });
+            List<Model.RankingList> rankingList = this._rankingListService.GetToDayRanking();
+            return Json(new { isSuccess = true, dataList = rankingList });
         }
         #endregion
     }

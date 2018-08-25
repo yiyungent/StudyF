@@ -14,6 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj" />
+    <ProjectReference Include="..\IBLL\IBLL.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
   </ItemGroup>
 

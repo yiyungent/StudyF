@@ -20,7 +20,7 @@
 	$("#btnClock").click(function (event) {
 		event.preventDefault();
 		$.ajax({
-			url: "/API/TimeMsg",
+			url: "/API/PunchClock",
 			type: "POST",
 			data: { "inputMessage": $.cookie("inputMessage") },
 			dataType: "json",

@@ -10,7 +10,12 @@ namespace DAL
     public class BaseDal<T>
         where T : class, new()
     {
-        DbContext Db;
+        DbContext Db { get; set; }
+
+        public BaseDal(object objDbContext)
+        {
+            this.Db = objDbContext as DbContext;
+        }
 
         /// <summary>
         /// 查询过滤

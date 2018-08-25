@@ -5,9 +5,9 @@ using System.Text;
 
 namespace IDAL
 {
-    public interface IDBSession
+    public interface IDbSession
     {
-        DbContext Db { get; }
+        DbContext Db { get; set; }
 
         IRankingListDal RankingListDal { get; set; }
 
