@@ -24,18 +24,29 @@ namespace WebApp.Controllers
             return View();
         }
 
-        #region Time打卡
+        #region Time早起打卡
         [HttpPost]
         public IActionResult PunchClock()
         {
             string sendMessage = Request.Form["inputMessage"];
             DateTime sendTime = DateTime.Now;
             string senderIP = HttpContext.Connection.RemoteIpAddress.ToString();
-
             Model.RankingList model = new Model.RankingList() { SendMessage = sendMessage, SendTime = sendTime, SenderIP = senderIP };
-            Model.RankingList addModel = this._rankingListService.AddEntity(model);
-
-            return Json(new { isSuccess = true, punchInfo = addModel });
+            string msg;
+            int rankingID;
+            bool isSuccess = this._rankingListService.PunchClock(model, out msg, out rankingID);
+            // 打卡信息，如果未打卡，RankingID 为 -1
+            Models.BaseViewModels.PunchInfoViewModel punchInfo = new Models.BaseViewModels.PunchInfoViewModel { RankingID = rankingID, PunchTime = model.SendTime, PunchIP = model.SenderIP, PunchMessage = model.SendMessage };
+            if (isSuccess)
+            {
+                // 打卡成功
+                return Json(new { code = 1, msg, punchInfo });
+            }
+            else
+            {
+                // 打卡失败
+                return Json(new { code = -1, msg, punchInfo });
+            }
         }
         #endregion
 
@@ -43,7 +54,7 @@ namespace WebApp.Controllers
         public IActionResult GetRankingList()
         {
             List<Model.RankingList> rankingList = this._rankingListService.GetToDayRanking();
-            return Json(new { isSuccess = true, dataList = rankingList });
+            return Json(new { code = 1, dataList = rankingList });
         }
         #endregion
     }

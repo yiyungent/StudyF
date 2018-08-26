@@ -16,6 +16,11 @@ namespace IDAL
 
         bool EditEntity(T entity);
 
+        /// <summary>
+        /// 标记添加实体，不一定立即执行，由会话层DbSession处SaveChanges()
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns>返回添加的实体</returns>
         T AddEntity(T entity);
     }
 }

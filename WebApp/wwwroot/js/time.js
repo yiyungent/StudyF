@@ -16,8 +16,8 @@
 	});
 	// end set message
 
-	// start send message
-	$("#btnClock").click(function (event) {
+	// start send punchClock message
+	$("#btnPunch").click(function (event) {
 		event.preventDefault();
 		$.ajax({
 			url: "/API/PunchClock",
@@ -25,15 +25,19 @@
 			data: { "inputMessage": $.cookie("inputMessage") },
 			dataType: "json",
 			success: function (data) {
-				if (data.isSuccess) {
-					$("#btnClock").addClass("disabled");
-					$("#btnClock").prop("disabled", true);
+				console.log(data);
+				if (data.code > 0) {
+					$("#btnPunch").text(data.msg);
+					$("#btnPunch").addClass("disabled");
+					$("#btnPunch").prop("disabled", true);
+				} else {
+					alert(data.msg);
 				}
 				loadRanking();
 			}
 		});
 	});
-	// end send message
+	// end send punchClock message
 
 	// start load ranking
 	loadRanking();
@@ -45,7 +49,7 @@
 			data: {},
 			dataType: "json",
 			success: function (data) {
-				if (data.isSuccess) {
+				if (data.code > 0) {
 					showRanking(data.dataList);
 				}
 			}

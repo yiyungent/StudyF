@@ -56,10 +56,10 @@ namespace DAL
         }
 
         /// <summary>
-        /// 添加
+        /// 标记添加实体，不一定立即执行，由会话层DbSession处SaveChanges()
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns></returns>
+        /// <returns>返回添加的实体</returns>
         public T AddEntity(T entity)
         {
             Db.Set<T>().Add(entity);
